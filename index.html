@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>24 dagar av rörelse – Träningsjulkalender</title>
+<style>
+:root{--red:#9f2635;--green:#174d3b;--gold:#e4bd67;--cream:#fff8e9}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:linear-gradient(145deg,#123d31,#1b5943);color:#fff;min-height:100vh}
+main{max-width:900px;margin:auto;padding:28px 18px 50px}
+header{text-align:center;padding:20px 0 24px}h1{font-family:Georgia,serif;font-size:clamp(2rem,6vw,3.4rem);margin:0;color:#ffe6a8}header p{margin:10px 0 0;color:#f8e8c8}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.door{border:2px solid var(--gold);border-radius:16px;background:linear-gradient(145deg,#b53643,#84202e);color:white;min-height:105px;font-size:2rem;font-weight:800;box-shadow:0 5px 0 #6c1925;cursor:pointer}
+.door small{display:block;font-size:.72rem;font-weight:500;margin-top:4px;color:#ffe8bd}
+.door:active{transform:translateY(3px);box-shadow:0 2px 0 #6c1925}
+.panel{display:none;background:var(--cream);color:#24352c;border-radius:22px;padding:24px;margin:22px 0;box-shadow:0 12px 30px #09251d66}
+.panel.show{display:block}.panel h2{color:var(--red);font-family:Georgia,serif;font-size:2rem;margin:0 0 12px}
+.panel .task{font-size:1.15rem;line-height:1.6}.pep{color:var(--green);font-weight:700;margin-top:16px}
+.back{background:var(--green);color:white;border:0;border-radius:999px;padding:11px 18px;font-size:1rem;margin-top:15px;cursor:pointer}
+.note{text-align:center;color:#e8dec7;font-size:.9rem;margin-top:24px}
+@media(max-width:520px){.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.door{min-height:88px;font-size:1.7rem}}
+</style>
+</head>
+<body><main>
+<header><div style="font-size:2rem">🎄 ✨ 🎅 ✨ 🎄</div><h1>24 dagar av rörelse</h1><p>Öppna dagens lucka och få en liten träningsutmaning!</p></header>
+<section id="panel" class="panel" aria-live="polite">
+<h2 id="title"></h2><p class="task" id="task"></p><p class="pep" id="pep"></p>
+<button class="back" onclick="closeDay()">Till kalendern</button>
+</section>
+<section class="grid" id="grid" aria-label="Julkalenderns luckor"></section>
+<p class="note">Rör dig på din nivå och anpassa övningarna efter dagsformen. Avbryt om något gör ont. ❤️</p>
+</main>
+<script>
+const challenges = [("Armhävningar", "Gör 10 armhävningar. Anpassa genom att göra dem på knä eller mot en stadig bänk.", "Starkt jobbat! Varje repetition räknas. 🎄"), ("Knäböj", "Gör 15 knäböj. Håll hälarna i golvet och låt knäna följa tårnas riktning.", "Du bygger styrka, en knäböj i taget!"), ("Plankan", "Håll plankan i 20 sekunder. Sätt gärna knäna i golvet om det känns bättre.", "En stark bål är en fin julklapp till dig själv!"), ("Promenad", "Ta en rask promenad i 10 minuter, inomhus eller utomhus.", "Frisk luft och rörelse – vilken härlig kombination!"), ("Utfallssteg", "Gör 8 utfallssteg per ben. Håll i en stol eller vägg för balans vid behov.", "Ta det lugnt och hitta din rytm!"), ("Höga knän", "Marscha eller jogga på stället med höga knän i 30 sekunder.", "Nu höjer vi pulsen lite!"), ("Vila och rörlighet", "Ta 3 minuter för lugna axelrullningar, mjuka sidoböjningar och att sträcka på kroppen.", "Återhämtning är också träning. Njut av stunden!"), ("Glute bridge", "Gör 12 höftlyft. Ligg på rygg med böjda knän och lyft höften kontrollerat.", "Starkt säte, stark känsla!"), ("Tåhävningar", "Gör 20 tåhävningar. Håll i en vägg eller stol om du vill.", "Små rörelser kan göra stor skillnad!"), ("Dead bug", "Gör 8 långsamma dead bug per sida. Ligg på rygg och sträck motsatt arm och ben.", "Kontroll före hastighet – snyggt jobbat!"), ("Danspaus", "Sätt på en favoritlåt och dansa loss i 2 minuter.", "Dagens mål: ha kul och få upp pulsen! 💃"), ("Armhävningsbonus", "Gör 8 armhävningar mot vägg, bänk eller på knä.", "Du väljer nivå – huvudsaken är att du rör dig!"), ("Sidoplanka", "Håll sidoplanka 15 sekunder per sida. Böj gärna det undre knät som stöd.", "Stabilitet och styrka – heja dig!"), ("Stolssittningar", "Sätt dig kontrollerat på en stadig stol och res dig igen 12 gånger.", "Funktionell vardagsstyrka när den är som bäst!"), ("Mountain climbers", "Gör mountain climbers lugnt i 20 sekunder, eller marschera stående med knälyft.", "Hitta ett tempo som passar dig!"), ("Balans", "Stå på ett ben i 20 sekunder per sida. Håll nära en vägg för stöd.", "Balans handlar också om tålamod. Bra gjort!"), ("Rygglyft", "Gör 10 små rygglyft. Ligg på mage och lyft bröstet lite från golvet utan att pressa nacken.", "Mjukt och kontrollerat – precis så!"), ("Snabba fötter", "Rör fötterna snabbt på stället i 20 sekunder, eller gör lugna sidosteg.", "Lite fart och massor av julenergi!"), ("Benlyft", "Gör 10 benlyft per ben stående. Håll i en stol om det behövs.", "Du är halvvägs genom dagens lilla utmaning!"), ("Rörlighet för höfter", "Gör 5 lugna höftcirklar åt varje håll och 5 mjuka höftfällningar.", "Ge kroppen lite extra omtanke idag."), ("Trappor eller steg", "Gå i trappor eller kliv upp och ner på ett lågt, stabilt trappsteg i 1 minut. Håll i räcket.", "Ett steg i taget tar dig framåt!"), ("Magaktivering", "Ligg på rygg, spänn magen lätt och håll i 5 sekunder. Upprepa 8 gånger medan du andas normalt.", "Styrka börjar med kontroll."), ("Valfri favorit", "Välj din favorit från kalendern och gör den en gång till – i din egen takt.", "Du känner din kropp bäst. Välj det som känns bra!"), ("Julaftonsmix", "Avsluta kalendern med 10 knäböj, 10 tåhävningar och 20 sekunders dans!", "God jul! Du har gett dig själv 24 dagar av rörelse. 🎅")];
+const grid=document.getElementById('grid');
+challenges.forEach((c,i)=>{const b=document.createElement('button');b.className='door';b.innerHTML=(i+1)+'<small>DECEMBER</small>';b.setAttribute('aria-label','Öppna lucka '+(i+1));b.onclick=()=>openDay(i+1);grid.appendChild(b)});
+function openDay(n){const c=challenges[n-1];document.getElementById('title').textContent='Lucka '+n+' – '+c[0];document.getElementById('task').textContent=c[1];document.getElementById('pep').textContent=c[2];document.getElementById('panel').classList.add('show');document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'start'});history.replaceState(null,'','?day='+n)}
+function closeDay(){document.getElementById('panel').classList.remove('show');history.replaceState(null,'',location.pathname)}
+const params=new URLSearchParams(location.search);const day=Number(params.get('day'));if(day>=1&&day<=24)openDay(day);
+</script></body></html>
